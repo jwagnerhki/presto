@@ -54,8 +54,10 @@ static void dump_buffer(double *prof, double *buffer, int numprof,
 
    /* Check for bad input values */
 
-   if (*phaseadded < 0.0 || *phaseadded > 1.0)
-      printf("Ack!  phaseadded is %17.15g in dump_buffer()!\n", *phaseadded);
+   if (*phaseadded < 0.0 || *phaseadded > 1.0) {
+      printf("Ack!  phaseadded is %17.15g in dump_buffer()! Stopping!\n", *phaseadded);
+      return;
+   }
    if (lophase >= 1.0)
       lophase -= (int) lophase;
 
