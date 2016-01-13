@@ -106,6 +106,10 @@ can be browsed or gotten from here in many different ways
 (including zipped or tar'd or via git).  If you are too lazy to
 read how to get it but have git on your system do:
 
+    git clone git://github.com/jwagnerhki/presto.git
+
+Alternatively, for the original PRESTO by Scott Ransom do:
+
     git clone git://github.com/scottransom/presto.git
 
 To update it on a regular basis do
@@ -123,7 +127,8 @@ the "Download Source" link on the github page.
 
 If you want the "classic" branch, do the following:
 
-    git clone git://github.com/scottransom/presto.git
+    git clone git://github.com/jwagnerhki/presto.git
+    (or for original PRESTO, do: git clone git://github.com/scottransom/presto.git)
     cd presto
     git remote add classic origin/classic 
     git checkout -b classic origin/classic
