@@ -1,6 +1,8 @@
 # PRESTO
 
-http://www.cv.nrao.edu/~sransom/presto/
+This copy of PRESTO is a code fork of the original PRESTO version 
+of 14 January 2016, with changes for the Korean VLBI network stations.
+The original PRESTO can be found at http://www.cv.nrao.edu/~sransom/presto/
 
 PRESTO is a large suite of pulsar search and analysis software
 developed by Scott Ransom mostly from scratch.  It was primarily
