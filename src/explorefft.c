@@ -20,7 +20,7 @@
 int compare_birds(const void *ca, const void *cb);
 
 /* Note:  zoomlevel is simply (LOGDISPLAYNUM-Log_2(numbins)) */
-#define LOGDISPLAYNUM     13    /* 1024: Maximum number of points to display at once */
+#define LOGDISPLAYNUM     14    /* 2048: Maximum number of points to display at once */
 #define LOGLOCALCHUNK     4     /* 16: Chunk size for polynomial fit */
 #define LOGMINBINS        5     /* 32 points */
 #define LOGMAXBINS        27    /* 128M points */
