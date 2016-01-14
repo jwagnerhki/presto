@@ -187,18 +187,22 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm)
                    tmpdir, polycofilenm);
            exit(-1);
        }
+#if !DEBUG_OUT
        remove("polyco.dat");
        remove("pulsar.par");
        remove("tempo.lis");
        remove("tz.in");
        remove("tz.tmp");
+#endif
    }
    chdir(origdir);
    free(origdir);
    free(pcpathnm);
    free(pcfilenm);
    free(command);
+#if !DEBUG_OUT
    remove(tmpdir);
+#endif
    psrname = (char *) calloc(strlen(psr.jname) + 1, sizeof(char));
    strcpy(psrname, psr.jname);
    return psrname;
