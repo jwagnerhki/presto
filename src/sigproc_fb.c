@@ -362,7 +362,7 @@ void read_filterbank_files(struct spectra_info *s)
     s->num_spec = (long long *)malloc(sizeof(long long) * s->num_files);
     s->num_pad = (long long *)malloc(sizeof(long long) * s->num_files);
     s->start_MJD = (long double *)malloc(sizeof(long double) * s->num_files);
-#if DEBUG_OUT       
+#if DEBUG_OUT
     printf("Reading '%s'\n", s->filenames[0]);
 #endif
     s->files[0] = chkfopen(s->filenames[0], "r");
@@ -378,6 +378,9 @@ void read_filterbank_files(struct spectra_info *s)
         s->num_polns = fb.nifs;
         strncpy(s->poln_order, fb.ifstream, 8);
     }
+#if DEBUG_OUT
+    printf("  file has fb.sumifs=%d and fb.nifs=%d : set s->summed_polns=%d, s->num_polns=%d\n", fb.sumifs, fb.nifs, s->summed_polns, s->num_polns);
+#endif
     // Position info
     {
         int d, h, m;
