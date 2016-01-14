@@ -1,3 +1,11 @@
+//
+// File: PRESTO ./src/sigproc_fb.c
+// Must be updated (together with misc_utils.c) whenever new station codes (0-255)
+// are introduced to the SIGPROC header. See get_telescope_name() here and
+// then telescope_to_tempocode() in misc_utils.c, and 2-letter station IDs
+// in the TEMPO 'obsys.dat' observatories file.
+//
+
 #include "presto.h"
 #include "mask.h"
 #include "sigproc_fb.h"
@@ -119,6 +127,32 @@ void get_telescope_name(int telescope_id, struct spectra_info *s)
         strcpy(s->telescope, "LOFAR");
         s->beam_FWHM = default_beam;
         break;
+    ////////// KVN
+    case 20:
+        strcpy(s->telescope, "KVNUS");
+        break;
+    case 21:
+        strcpy(s->telescope, "KVNYS");
+        break;
+    case 22:
+        strcpy(s->telescope, "KVNTN");
+        break;
+    ////////// 1.3mm VLBI
+    case 23:
+        strcpy(s->telescope, "APEX");
+        break;
+    case 24:
+	strcpy(s->telescope, "ALMA_P40");
+        break;
+    case 25:
+        strcpy(s->telescope, "PICO");
+        break;
+    case 26:
+        strcpy(s->telescope, "ARO_SMT");
+        break;
+    case 27:
+        strcpy(s->telescope, "CARMA");
+        break;
     default:
         strcpy(s->telescope, "Unknown");
         s->beam_FWHM = default_beam;
@@ -128,44 +162,38 @@ void get_telescope_name(int telescope_id, struct spectra_info *s)
 
 void get_backend_name(int machine_id, struct spectra_info *s)
 {
-   char *backend, string[80];
-   switch (machine_id) {
-   case 0:
-      strcpy(string, "FAKE");
-      break;
-   case 1:
-      strcpy(string, "PSPM");
-      break;
-   case 2:
-      strcpy(string, "WAPP");
-      break;
-   case 3:
-      strcpy(string, "AOFTM");
-      break;
-   case 4:
-      strcpy(string, "BPP");
-      break;
-   case 5:
-      strcpy(string, "OOTY");
-      break;
-   case 6:
-      strcpy(string, "SCAMP");
-      break;
-   case 7:
-      strcpy(string, "SPIGOT");
-      break;
-   case 11:
-      strcpy(string, "BG/P");
-      break;
-   case 12:
-      strcpy(string, "PDEV");
-      break;
-   default:
-      strcpy(s->backend, "Unknown");
-      break;
-   }
-   backend = (char *) calloc(strlen(string) + 1, 1);
-   strcpy(backend, string);
+    switch (machine_id) {
+    case 0:
+        strcpy(s->backend, "FAKE");
+        break;
+    case 1:
+        strcpy(s->backend, "PSPM");
+        break;
+    case 2:
+        strcpy(s->backend, "WAPP");
+        break;
+    case 3:
+        strcpy(s->backend, "AOFTM");
+        break;
+    case 4:
+        strcpy(s->backend, "BPP");
+        break;
+    case 5:
+        strcpy(s->backend, "OOTY");
+        break;
+    case 6:
+        strcpy(s->backend, "SCAMP");
+        break;
+    case 7:
+        strcpy(s->backend, "SPIGOT");
+        break;
+    case 11:
+        strcpy(s->backend, "BG/P");
+        break;
+    default:
+        strcpy(s->backend, "Unknown");
+        break;
+    }
 }
 
 
@@ -213,6 +241,10 @@ int read_filterbank_header(sigprocfb * fb, FILE * inputfile)
    int itmp, nbytes = 0, totalbytes;
    int expecting_rawdatafile = 0, expecting_source_name = 0;
    int barycentric, pulsarcentric;
+
+   /* initialize */
+   memset((void*)fb, 0, sizeof(sigprocfb));
+
    /* try to read in the first line of the header */
    get_string(inputfile, &nbytes, string);
    if (!strings_equal(string, "HEADER_START")) {
