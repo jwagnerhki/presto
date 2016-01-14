@@ -132,6 +132,29 @@ char *make_polycos(char *parfilenm, infodata * idata, char *polycofilenm)
    } else if (strcmp(idata->telescope, "Geocenter") == 0) {
       scopechar = 'o';
       tracklen = 12;
+   // KVN
+   } else if (strcmp(idata->telescope, "KVNUS") == 0) {
+      scopechar = 'k';
+      tracklen = 12;
+   } else if (strcmp(idata->telescope, "KVNYS") == 0) {
+      scopechar = 'l';
+      tracklen = 12;
+   } else if (strcmp(idata->telescope, "KVNKT") == 0) {
+      scopechar = 'm';
+      tracklen = 12;
+   // 1.3mm VLBI
+   } else if (strcmp(idata->telescope, "APEX") == 0) {
+      scopechar = 'a';
+      tracklen = 12;
+   } else if (strcmp(idata->telescope, "PICO") == 0) {
+      scopechar = 'c';
+      tracklen = 12;
+   } else if (strcmp(idata->telescope, "ARO_SMT") == 0) {
+      scopechar = 'd';
+      tracklen = 12;
+   } else if (strcmp(idata->telescope, "CARMA") == 0) {
+      scopechar = 'e';
+      tracklen = 12;
    } else {                     /*  Barycenter */
       printf("Defaulting to barycenter for polyco generation...\n");
       scopechar = '@';
