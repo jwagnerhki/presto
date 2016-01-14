@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
           } else {
               rootnm = tmprootnm;
           }
-          free(suffix);
+          if (suffix) free(suffix);
       } else {
           rootnm = cmd->outfile;
       }
@@ -1437,7 +1437,10 @@ int main(int argc, char *argv[])
          good_ipd = (numtrials - 1) / 2;
       if (cmd->nosearchP && cmd->searchpddP)
          good_ipdd = (numtrials - 1) / 2;
-
+      if (cmd->nopsearchP) {
+         double checkedP = search.pstep * (good_ip - (numtrials - 1) / 2);
+         printf("The P search mode was disabled (-nopsearch or others). Using good_ip %d yielding period of %f\n", good_ip, checkedP);
+      }
       /* Convert the folding freqs and derivs to periods */
 
       switch_f_and_p(foldf, foldfd, foldfdd, &po, &pdo, &pddo);
@@ -1493,6 +1496,7 @@ int main(int argc, char *argv[])
                /* Find the closest DM to the requested DM */
                if (cmd->nodmsearchP) {
                   double mindmerr = 1000.0, dmerr, trialdm;
+                  printf("The DM search mode was disabled (-nodmsearch or other). Looking for DM closest to requested DM...\n");
                   for (idm = 0; idm < numdmtrials; idm++) {     /* Loop over DMs */
                      trialdm = lodm + idm * ddm;
                      dmerr = fabs(trialdm - cmd->dm);
@@ -1501,6 +1505,7 @@ int main(int argc, char *argv[])
                         mindmerr = dmerr;
                      }
                   }
+                  printf("Found DM of %f at idx %d/%d. It is off by %f from the requested DM of %f.\n", lodm+good_idm*ddm, good_idm, numdmtrials, mindmerr, cmd->dm);
                }
             }
             for (idm = 0; idm < numdmtrials; idm++)
