@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
       /* The number of data points to work with at a time */
       if (worklen > idata.N)
           worklen = idata.N;
-      worklen = (long) (worklen / 1024) * 1024;
+      worklen = (long) (worklen / 1024) * 1024; // FIXME: should this be 2048 as in SPIGOT_MAXLAGS definition?
 
       /* Compare the size of the data to the size of output we request */
       if (!cmd->numoutP)
