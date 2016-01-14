@@ -215,13 +215,44 @@ int getpoly(double mjd, double duration, double *dm, FILE * fp, char *pname)
   DM and binary phase info added 23 Apr 90 (new version TZ)
   Puts out two sets of mjdmids for better precision. 16 Nov 1996.
   Recovers Earth-Doppler-shift factor and polyco frequency 13 Feb 1997.
+
+  The TEMPO polyco.dat file format is desribed below, see also
+  http://tempo.sourceforge.net/ref_man_sections/tz-polyco.txt
+
+  Line  Columns     Item
+  ----  -------   -----------------------------------
+    1      1-10   Pulsar Name
+          11-19   Date (dd-mmm-yy)
+          20-31   UTC (hhmmss.ss)
+          32-51   TMID (MJD)
+          52-72   DM
+          74-79   Doppler shift due to earth motion (10^-4)
+          80-86   Log_10 of fit rms residual in periods
+    2      1-20   Reference Phase (RPHASE)
+          21-38   Reference rotation frequency (F0)
+          39-43   Observatory number
+          44-49   Data span (minutes)
+          50-54   Number of coefficients
+          55-75   Observing frequency (MHz)
+          76-80   Binary phase
+    3*     1-25   Coefficient 1 (COEFF(1))
+          26-50   Coefficient 2 (COEFF(2))
+          51-75   Coefficient 3 (COEFF(3))
+
+    * Subsequent lines have three coefficients each, up to NCOEFF
+
+   The pulse phase and frequency at time T are then calculated as:
+         DT = (T-TMID)*1440
+      PHASE = RPHASE + DT*60*F0 + COEFF(1) + DT*COEFF(2) + DT^2*COEFF(3) + ....
+   FREQ(Hz) = F0 + (1/60)*(COEFF(2) + 2*DT*COEFF(3) + 3*DT^2*COEFF(4) + ....)
+
 */
 
-   char name0[15], testname[15], date0[15], binpha[16];
+   char name0[15], testname[15], date0[15], tutc[15], binpha[16];
    char dummy[3][30];
    char buffer[160];
    double aphi0b[30], adphib[30];
-   double dm0, z40, mjdend;
+   double dm0, z40, fitrms_log10, mjdend;
    float r, tfreq;
    long int mjddummy;
    int binary;
@@ -232,17 +263,18 @@ int getpoly(double mjd, double duration, double *dm, FILE * fp, char *pname)
 
    mjdend = mjd + duration;
    j = 0;
-   while (fgets(buffer, 90, fp) != NULL) {
+   while (fgets(buffer, sizeof(buffer), fp) != NULL) {
       sscanf(buffer, "%s", testname);
       if (strncmp(pname, testname, 4) == 0) {
-         sscanf(buffer, "%s%s%f%ld%lf%lf%lf",
-                name0, date0, &r, &mjddummy, &mjd1mid[j], &dm0, &z40);
-         fgets(buffer, 80, fp);
-         sscanf(buffer, "%lf%lf%i%d%d", &rphase[j], &f0[j], &jobs, &nblk0, &ncoeff0);
-         fgets(buffer, 80, fp);
-         sscanf(buffer, "%f%16c", &r, binpha);
+         // Line 1 with 86 columns
+         sscanf(buffer, "%s%s%s%ld%lf%lf%lf%lf",
+                name0, date0, tutc, &mjddummy, &mjd1mid[j], &dm0, &z40, &fitrms_log10);
+         // Line 2 with 80 columns
+         fgets(buffer, sizeof(buffer), fp);
+         sscanf(buffer, "%lf%lf%i%d%d%f%15c", &rphase[j], &f0[j], &jobs, &nblk0, &ncoeff0, &r, binpha);
+         // Line 3 .. N with 75 columns each
          for (k = 0; k < ncoeff0 / 3; k++) {
-            fgets(buffer, 80, fp);
+            fgets(buffer, sizeof(buffer), fp);
             sscanf(buffer, "%s%s%s", dummy[0], dummy[1], dummy[2]);
             for (kk = 0; kk < 3; kk++) {
                len = strlen(dummy[kk]);
