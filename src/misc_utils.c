@@ -1,3 +1,11 @@
+//
+// File: PRESTO ./src/misc_utils.c
+// Must manually update the function telescope_to_tempocode() whenever
+// the TEMPO telescope ID file 'obsys.dat' is updated.
+// Note that updates to 'obsys.dat' further require the 'aliases.c' under
+// the SIGPROC tools ./src/aliases/ to be updated in a similar manner!
+//
+
 #include <ctype.h>
 #include "misc_utils.h"
 #include "slamac.h"
@@ -122,6 +130,7 @@ int split_root_suffix(char *input, char **root, char **suffix)
    sptr = strrchr(input, '.');
    if (sptr == NULL) {
       *root = (char *) calloc(len + 1, sizeof(char));
+      *suffix = NULL;
       strncpy(*root, input, len);
       return 0;
    } else {
@@ -234,13 +243,37 @@ void telescope_to_tempocode(char *inname, char *outname, char*obscode)
     } else if (strcmp(scope, "geocenter") == 0) {
         strcpy(obscode, "EC");
         strcpy(outname, "Geocenter");
+    // KVN
+    } else if (strcasecmp(scope, "KVNUS") == 0) {
+        strcpy(obscode, "KU");
+        strcpy(outname, "KVNUS");
+    } else if (strcasecmp(scope, "KVNYS") == 0) {
+        strcpy(obscode, "KY");
+        strcpy(outname, "KVNYS");
+    } else if (strcasecmp(scope, "KVNTN") == 0) {
+        strcpy(obscode, "KT");
+        strcpy(outname, "KVNTN");
+    // 1.3mm VLBI
+    } else if (strcasecmp(scope, "APEX") == 0) {
+        strcpy(obscode, "AP");
+        strcpy(outname, "APEX");
+    } else if (strcasecmp(scope, "PICO") == 0) {
+        strcpy(obscode, "PV");
+        strcpy(outname, "PICO");
+    } else if (strcasecmp(scope, "ARO_SMT") == 0) {
+        strcpy(obscode, "AZ");
+        strcpy(outname, "ARO_SMT");
+    } else if (strcasecmp(scope, "CARMA") == 0) {
+        strcpy(obscode, "CM");
+        strcpy(outname, "CARMA");
     } else {
-        printf("\nWARNING!!!:  I don't recognize the observatory (%s)!\n",
-               inname);
+        printf("\nWARNING!!!:  I don't recognize the observatory (%s)!\n", scope);
         printf("                 Defaulting to the Geocenter for TEMPO.\n");
         strcpy(obscode, "EC");
         strcpy(outname, "Unknown");
+        return;
     }
+    printf("Mapped observatory (%s) to TEMPO observatory code '%s'\n", scope, obscode);
 }
 
 
