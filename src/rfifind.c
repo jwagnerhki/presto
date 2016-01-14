@@ -260,8 +260,8 @@ int main(int argc, char *argv[])
       if ((long long) idata.N % ptsperint)
          numint++;
       inttime = ptsperint * idata.dt;
-      printf("Analyzing data sections of length %d points (%.6g sec).\n",
-             ptsperint, inttime);
+      printf("Analyzing data sections of length %d points (%.6g sec) as %d blocks/int, %d pts/block.\n",
+             ptsperint, inttime, blocksperint, ptsperblock);
       {
          int *factors, numfactors;
 
