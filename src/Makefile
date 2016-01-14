@@ -1,6 +1,15 @@
 #  Makefile for PRESTO
 #   by Scott M. Ransom
 
+all: check-env build
+
+check-env:
+ifndef PRESTO
+	$(error Environment variable 'PRESTO' is undefined. Set it to the PRESTO root directory, i.e. the directory containing e.g. README.md)
+else
+	$(info Installing binaries into $(PRESTO)/bin/ and $(PRESTO)/lib/)
+endif
+
 # OS type
 OS = Linux
 
@@ -43,6 +52,7 @@ CFITSIOLINK := $(shell pkg-config --libs cfitsio)
 # The standard PRESTO libraries to link into executables
 PRESTOLINK = $(CFITSIOLINK) -L$(PRESTO)/lib -lpresto $(FFTLINK)
 
+MPICC = mpicc
 CC = gcc
 #CC = clang-3.6
 FC = gfortran
@@ -145,7 +155,7 @@ BINARIES = makedata makeinf mjd2cal realfft quicklook\
 #	dump_spigot_zerolag spigot2filterbank\
 #	spigotSband2filterbank GBT350filterbank\
 
-all: libpresto slalib binaries
+build: libpresto slalib binaries
 
 # Default indentation is K&R style with no-tabs,
 # an indentation level of 4 (default), and a line-length of 85
@@ -185,13 +195,13 @@ binaries: $(BINARIES)
 mpi: mpiprepsubband
 
 mpiprepsubband_utils.o: mpiprepsubband_utils.c
-	mpicc $(CLINKFLAGS) -c mpiprepsubband_utils.c
+	$(MPICC) $(CLINKFLAGS) -c mpiprepsubband_utils.c
 
 mpiprepsubband.o: mpiprepsubband.c
-	mpicc $(CLINKFLAGS) -c mpiprepsubband.c
+	$(MPICC) $(CLINKFLAGS) -c mpiprepsubband.c
 
 mpiprepsubband: mpiprepsubband_cmd.c mpiprepsubband_cmd.o mpiprepsubband_utils.o mpiprepsubband.o $(INSTRUMENTOBJS) libpresto
-	mpicc $(CLINKFLAGS) -o $(PRESTO)/bin/$@ mpiprepsubband_cmd.o mpiprepsubband_utils.o mpiprepsubband.o $(INSTRUMENTOBJS) $(PRESTOLINK) -lcfitsio -lm
+	$(MPICC) $(CLINKFLAGS) -o $(PRESTO)/bin/$@ mpiprepsubband_cmd.o mpiprepsubband_utils.o mpiprepsubband.o $(INSTRUMENTOBJS) $(PRESTOLINK) -lcfitsio -lm
 
 accelsearch: accelsearch_cmd.c accelsearch_cmd.o accel_utils.o accelsearch.o zapping.o libpresto
 	$(CC) $(CLINKFLAGS) $(OMPFLAGS) -o $(PRESTO)/bin/$@ accelsearch_cmd.o accel_utils.o accelsearch.o zapping.o $(PRESTOLINK) $(GLIBLINK) -lm
