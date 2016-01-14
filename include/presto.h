@@ -3,6 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
+#include <fftw3.h>
 #include "clk_tck.h"
 #include "ransomfft.h"
 #include "meminfo.h"
@@ -1477,4 +1478,5 @@ fcomplex *atwood_search(double *events, double *weights,
 /*    dt:  the time duration to use for the binning                */
 
 
-
+/* Function from ./src/transpose.c */
+fftwf_plan plan_transpose(int rows, int cols, float *in, float *out);
