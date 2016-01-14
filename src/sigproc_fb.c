@@ -158,6 +158,7 @@ void get_telescope_name(int telescope_id, struct spectra_info *s)
         s->beam_FWHM = default_beam;
         break;
     }
+    printf("Mapped TEMPO observatory number '%d' to telescope '%s' (hardcoded in PRESTO; not based on TEMPO obsys.dat)\n", telescope_id, s->telescope);
 }
 
 void get_backend_name(int machine_id, struct spectra_info *s)

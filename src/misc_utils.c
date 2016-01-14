@@ -273,7 +273,7 @@ void telescope_to_tempocode(char *inname, char *outname, char*obscode)
         strcpy(outname, "Unknown");
         return;
     }
-    printf("Mapped observatory (%s) to TEMPO observatory code '%s'\n", scope, obscode);
+    printf("Mapped observatory (%s) to TEMPO observatory code '%s' (hardcoded in PRESTO; not based on TEMPO obsys.dat)\n", scope, obscode);
 }
 
 
