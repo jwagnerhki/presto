@@ -2,7 +2,7 @@
 #include "mask.h"
 #include "multibeam.h"
 
-#define MAXNUMCHAN 1024
+#define MAXNUMCHAN 2048
 
 /* All of the following have an _st to indicate static */
 static long long numpts_st[MAXPATCHFILES], padpts_st[MAXPATCHFILES], N_st;
